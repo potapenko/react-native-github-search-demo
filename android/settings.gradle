@@ -1,0 +1,3 @@
+rootProject.name = 'ReactNativeGithubSearchDemo'
+
+include ':app'

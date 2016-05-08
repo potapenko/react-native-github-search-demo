@@ -1,0 +1,9 @@
+
+.idea/
+
+node_modules/
+
+
+node_modules/react-native-search-bar/RNSearchBar.xcodeproj/project.xcworkspace/contents.xcworkspacedata
+
+node_modules/react-native-search-bar/RNSearchBar.xcodeproj/project.xcworkspace/xcshareddata/RNSearchBar.xccheckout
