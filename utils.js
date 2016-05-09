@@ -4,7 +4,9 @@ import {
     StyleSheet,
     Text,
     View,
-    Image
+    Image,
+    Linking,
+    TouchableHighlight
 } from 'react-native';
 
 
@@ -33,6 +35,35 @@ export class Stars extends Component {
         while(--count > 0)stars+="★";
         return <Text style={[styles.stars, this.props.style]}>{stars}</Text>
     }
+}
+
+
+export class OpenURLButton extends Component {
+
+    constructor(props){
+        super(props);
+        this.handleClick = this.handleClick.bind(this);
+    }
+
+    handleClick(url) {
+        Linking.canOpenURL(this.props.url).then(supported => {
+          if (supported) {
+            Linking.openURL(this.props.url);
+        } else {
+            console.log('Don\'t know how to open URI: ' + this.props.url);
+        }
+    });
+    }
+
+render() {
+    return (
+      <TouchableHighlight underlayColor="transparent" onPress={this.handleClick}>
+          <View style={styles.button}>
+            <Text style={styles.stars}>{this.props.url}</Text>
+          </View>
+      </TouchableHighlight>
+      );
+}
 }
 
 

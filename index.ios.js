@@ -12,10 +12,23 @@ import {SearchPage} from './search-page.js';
 import {Flexer, Spacer} from './utils.js';
 
 const firstRoute = {
-  name: 'Home!',
+  name: 'Github Search',
   component: SearchPage,
-  hideNavigationBar: true
+  hideNavigationBar: true,
 };
+
+class BackButtonComponent extends Component {
+
+  render() {
+    return (
+
+      <View style={styles.backButton}>
+        <Text style={styles.backButtonText}>Back</Text>
+      </View>
+
+    );
+  }
+}
 
 class ReactNativeGithubSearchDemo extends Component {
 
@@ -25,7 +38,8 @@ class ReactNativeGithubSearchDemo extends Component {
       <Router 
         style={[styles.container]}
         headerStyle={styles.header}
-        firstRoute={firstRoute}>
+        firstRoute={firstRoute}
+        backButtonComponent={BackButtonComponent}>
       </Router>
 
     );
@@ -33,13 +47,22 @@ class ReactNativeGithubSearchDemo extends Component {
 }
 
 const styles = StyleSheet.create({
+  backButton: {
+    marginTop: 4,
+    marginLeft: 16,
+    width: 80
+  },
+  backButtonText: {
+    fontSize: 15,
+    color: "white",
+  },
   container: {
     flex: 1,
-    backgroundColor: '#F5FCFF',
   },
   header: {
-    backgroundColor: "transparent"
-  }
+    backgroundColor: "skyblue",
+  },
+
 });
 
 AppRegistry.registerComponent('ReactNativeGithubSearchDemo', () => ReactNativeGithubSearchDemo);

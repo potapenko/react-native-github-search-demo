@@ -12,6 +12,12 @@ import SearchBar from 'react-native-search-bar';
 import moment from 'momentjs';
 import RefreshInfiniteListView from '@remobile/react-native-refresh-infinite-listview';
 import {Flexer, Spacer, Avatar, Stars} from './utils.js';
+import {DetailsPage} from './details-page.js';
+
+const detailsRoute = {
+  name: 'Details',
+  component: DetailsPage,
+};
 
 export class SearchPage extends Component {
 
@@ -24,6 +30,7 @@ export class SearchPage extends Component {
     this.buildDataSource = this.buildDataSource.bind(this);
     this.onInfinite = this.onInfinite.bind(this);
     this.loadedAllData = this.loadedAllData.bind(this);
+    this.openDetails = this.openDetails.bind(this);
 
     this.state = {searchString: "", sortMode: "stars", currentPage: 1, pages: [], dataSource: this.buildDataSource([])};
   }
@@ -65,9 +72,15 @@ export class SearchPage extends Component {
     return ds.cloneWithRows(result);
   }
 
+  openDetails(data){
+    this.props.toRoute(Object.assign(detailsRoute, {data: data}))
+  }
+
+  // <Text style={styles.resultTitle}> <Text style={styles.resultRepositori}>{data.owner.login}</Text>/{data.name}</Text>
+
   renderRow(data) {
     return (
-      <TouchableHighlight onPress={e=>console.log("pressed")} style={[styles.item]} underlayColor="transparent">
+      <TouchableHighlight onPress={e=>this.openDetails(data)} style={[styles.item]} underlayColor="transparent">
         <View style={[styles.flex, styles.row]}>
           <Avatar url={data.owner.avatar_url}/>
           <Spacer width={10} />
@@ -89,7 +102,7 @@ export class SearchPage extends Component {
   renderEmptyRow() {
     return (
       <Text style={styles.empty}>
-        have no data
+        
       </Text>
     )
   }
@@ -121,11 +134,15 @@ export class SearchPage extends Component {
     return (
 
       <View style={[styles.container]}>
-        <SearchBar
-          ref={(searchBar) => {this.searchBar= searchBar}}
-          placeholder='Search'
-          onChangeText={this.onSearch}
-        />
+        <View style={[styles.shadow]}>
+          <SearchBar
+            ref={(searchBar) => {this.searchBar= searchBar}}
+            placeholder='Github Search'
+            barTintColor="skyblue"
+            onChangeText={this.onSearch}
+          />
+        </View>
+        <Spacer height={12}/>
         <View style={[styles.row, styles.sortPannel]}>
           <Text style={[styles.sortText]}>Sort By: </Text>
           <Spacer width={10}/>
@@ -166,6 +183,10 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "200"
   },
+  resultRepositori: {
+    fontSize: 12,
+    fontWeight: "bold"
+  },
   stars: {
     opacity: 0.7,
     color: "gray"
@@ -200,6 +221,16 @@ const styles = StyleSheet.create({
   },
   resultList: {
     flex: 1,
+  },
+  shadow: {
+    // borderRadius: 10,
+    // shadowColor: "black",
+    // shadowOpacity: 0.8,
+    // shadowRadius: 12,
+    // shadowOffset: {
+    //   hight: 1,
+    //   width: 0,
+    // }
   }
 });
 
