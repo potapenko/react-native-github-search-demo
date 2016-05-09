@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 
 import SearchBar from 'react-native-search-bar';
+import moment from 'momentjs';
 import RefreshInfiniteListView from '@remobile/react-native-refresh-infinite-listview';
 import {Flexer, Spacer, Avatar, Stars} from './utils.js';
 
@@ -29,7 +30,6 @@ export class SearchPage extends Component {
 
 
   onSearch(searchString) {
-    // sort mode - stars or updated
     this.setState({currentPage:1, searchString: searchString, dataSource: this.buildDataSource([])});
     this.loadPage(1);
   }
@@ -67,7 +67,7 @@ export class SearchPage extends Component {
 
   renderRow(data) {
     return (
-      <TouchableHighlight style={[styles.item]} underlayColor="transparent">
+      <TouchableHighlight onPress={e=>console.log("pressed")} style={[styles.item]} underlayColor="transparent">
         <View style={[styles.flex, styles.row]}>
           <Avatar url={data.owner.avatar_url}/>
           <Spacer width={10} />
@@ -77,6 +77,8 @@ export class SearchPage extends Component {
             <View style={styles.row}>
               <Stars style={styles.stars} stars={1}/>
               <Text style={styles.stars}>{data.stargazers_count}</Text>
+              <Spacer width={20}/>
+              <Text style={styles.stars}>{'Updated: ' + moment(data.updated_at).format("DD-MM-YYYY")}</Text>
             </View>
           </View>
         </View>
@@ -102,6 +104,20 @@ export class SearchPage extends Component {
   }
 
   render() {
+
+    var buildSortStyles = (sortMode) => {
+      if(sortMode == this.state.sortMode){
+        return [styles.sortText, styles.underline];
+      }else{
+        return [styles.sortText];
+      }
+    }
+
+    var setSortMode = (sortMode) => {
+      this.setState({sortMode: sortMode});
+      this.loadPage(0)
+    }
+
     return (
 
       <View style={[styles.container]}>
@@ -110,6 +126,17 @@ export class SearchPage extends Component {
           placeholder='Search'
           onChangeText={this.onSearch}
         />
+        <View style={[styles.row, styles.sortPannel]}>
+          <Text style={[styles.sortText]}>Sort By: </Text>
+          <Spacer width={10}/>
+          <TouchableHighlight onPress={e=> setSortMode("stars")} underlayColor="transparent">
+            <Text style={buildSortStyles("stars")}>Stars</Text>
+          </TouchableHighlight>
+          <Spacer width={10}/>
+          <TouchableHighlight onPress={e=> setSortMode("updated")} underlayColor="transparent">
+            <Text style={buildSortStyles("updated")}>Last Update</Text>
+          </TouchableHighlight>
+        </View>
         <RefreshInfiniteListView
           ref={(list) => {this.list= list}}
           style={[styles.flex]}
@@ -153,6 +180,17 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: "row"
+  },
+  sortPannel: {
+    paddingTop: 8, 
+    paddingLeft: 16, 
+    opacity: 0.7,
+  },
+  sortText: {
+    fontSize: 12,
+  },
+  underline: {
+    textDecorationLine: "underline"
   },
   flex: {
     flex: 1
