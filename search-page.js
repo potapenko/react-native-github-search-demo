@@ -19,6 +19,18 @@ const detailsRoute = {
   component: DetailsPage,
 };
 
+var lazyId = 0;
+const clearLazy = () => {
+  clearInterval(lazyId);
+}
+const lazyCall = (cb, idle = 400) => {
+  clearLazy();
+  lazyId = setInterval(function(){
+    clearLazy();
+    cb();
+  }, idle);
+}
+
 export class SearchPage extends Component {
 
   constructor(props) {
@@ -38,12 +50,12 @@ export class SearchPage extends Component {
 
   onSearch(searchString) {
     this.setState({pages: [], currentPage:1, loading: !!searchString, searchString: searchString, dataSource: this.buildDataSource([])});
-    setTimeout(()=> {this.loadPage(1)}, 200)
+    lazyCall(()=> {this.loadPage(1)})
   }
 
   onRefresh(){
     this.setState({pages: [], currentPage:1, loading: true, dataSource: this.buildDataSource([])});
-    setTimeout(()=> {this.loadPage(1)}, 200)
+    lazyCall(()=> {this.loadPage(1)}, 200)
   }
 
   loadPage(pageNumber){
