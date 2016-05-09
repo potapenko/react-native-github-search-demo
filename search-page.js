@@ -38,12 +38,12 @@ export class SearchPage extends Component {
 
   onSearch(searchString) {
     this.setState({pages: [], currentPage:1, loading: !!searchString, searchString: searchString, dataSource: this.buildDataSource([])});
-    lazyCall(()=> {this.loadPage(1)})
+    lazyCall(()=> {this.loadPage(1)}, 1000)
   }
 
   onRefresh(){
     this.setState({pages: [], currentPage:1, loading: true, dataSource: this.buildDataSource([])});
-    lazyCall(()=> {this.loadPage(1)}, 200)
+    this.loadPage(1);
   }
 
   loadPage(pageNumber){
