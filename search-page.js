@@ -46,22 +46,27 @@ export class SearchPage extends Component {
     setTimeout(()=> {this.loadPage(1)}, 200)
   }
 
-  loadPage(loadPage){
-    this.setState({currentPage: loadPage});
-    fetch(`https://api.github.com/search/repositories?q=${this.state.searchString}&page=${loadPage}&sort=${this.state.sortMode}&order=desc&r=${Math.random()}`)
+  loadPage(pageNumber){
+    this.setState({currentPage: pageNumber});
+    fetch(`https://api.github.com/search/repositories?q=${this.state.searchString}&page=${pageNumber}&sort=${this.state.sortMode}&order=desc&r=${Math.random()}`)
       .then((response) => response.json())
       .then((json) => {
         this.list.hideHeader();
         var pages = this.state.pages;
-        if(loadPage == 1){
+        if(pageNumber == 1){
           pages = [json.items];
         }else{
-          pages[loadPage] = json.items;
+          pages[pageNumber] = json.items;
         }
         var result = [];
         pages.filter(e => !!e).forEach(e => result = [...result, ...e]);
-        console.log(json.items.length, ":new list size: ", result.length, ", pages: ", pages.length)
-        this.setState({pages: pages, loading:false, dataSource: this.buildDataSource(result)});
+        console.log((json.items && json.items.length), ":new list size: ", result.length, ", pages: ", pages.length)
+        if(!json.items){
+          console.log("error loading items: ", json);
+          this.setState({loading:false});
+        }else{
+          this.setState({pages: pages, loading:false, dataSource: this.buildDataSource(result)});
+        }
       })
       .catch((error) => {
         console.warn("error:", error);
