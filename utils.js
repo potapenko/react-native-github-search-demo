@@ -6,7 +6,8 @@ import {
     View,
     Image,
     Linking,
-    TouchableHighlight
+    TouchableHighlight,
+    ActivityIndicatorIOS
 } from 'react-native';
 
 
@@ -15,11 +16,13 @@ export class Spacer extends Component {
        return (<View style={{width: this.props.width || 1, height: this.props.height || 1}}/>)
     }
 }
+
 export class Flexer extends Component {
     render() {
         return (<View style={{flex: this.props.flex || 1}}/>)
     }
 }
+
 export class Avatar extends Component {
     render() {
         return (<View style={[styles.overlay, styles.avatar]}>
@@ -37,6 +40,21 @@ export class Stars extends Component {
     }
 }
 
+export class LoadingIndicator extends Component {
+    render() {
+        return (
+            <View style={styles.indicator}>
+                <Text style={styles.indicatorText}>
+                loading...
+                </Text>
+
+                <ActivityIndicatorIOS
+                size='small'
+                animating={true}/>
+            </View>
+            );
+    }
+}
 
 export class OpenURLButton extends Component {
 
@@ -72,15 +90,24 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
     },
     avatar: {
-      borderRadius: 30,
-      width: 60, 
-      height: 60,
+        borderRadius: 30,
+        width: 60, 
+        height: 60,
     },
     image: {
       flex: 1,
     },
+    indicator: {
+        marginTop: 16,
+        height: 40, 
+        justifyContent:'center', 
+        alignItems:'center',
+    },
+    indicatorText: {
+        fontSize: 18,
+    },
     stars: {
-      opacity: 0.5,
-      color: "gray"
+        opacity: 0.5,
+        color: "gray"
     }
 });

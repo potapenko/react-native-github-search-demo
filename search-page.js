@@ -11,7 +11,7 @@ import {
 import SearchBar from 'react-native-search-bar';
 import moment from 'momentjs';
 import RefreshInfiniteListView from '@remobile/react-native-refresh-infinite-listview';
-import {Flexer, Spacer, Avatar, Stars} from './utils.js';
+import {Flexer, Spacer, Avatar, Stars, LoadingIndicator} from './utils.js';
 import {DetailsPage} from './details-page.js';
 
 const detailsRoute = {
@@ -37,18 +37,18 @@ export class SearchPage extends Component {
 
 
   onSearch(searchString) {
-    this.setState({currentPage:1, searchString: searchString, dataSource: this.buildDataSource([])});
-    this.loadPage(1);
+    this.setState({currentPage:1, loading: !!searchString, searchString: searchString, dataSource: this.buildDataSource([])});
+    setTimeout(()=> {this.loadPage(1)}, 200)
   }
 
   onRefresh(){
-    this.setState({currentPage:1, dataSource: this.buildDataSource([])});
-    this.loadPage(1);
+    this.setState({currentPage:1, loading: true, dataSource: this.buildDataSource([])});
+    setTimeout(()=> {this.loadPage(1)}, 200)
   }
 
   loadPage(loadPage){
     this.setState({currentPage: loadPage});
-    fetch(`https://api.github.com/search/repositories?q=${this.state.searchString}&page=${loadPage}&sort=${this.state.sortMode}&order=desc`)
+    fetch(`https://api.github.com/search/repositories?q=${this.state.searchString}&page=${loadPage}&sort=${this.state.sortMode}&order=desc&r=${Math.random()}`)
       .then((response) => response.json())
       .then((json) => {
         this.list.hideHeader();
@@ -60,7 +60,7 @@ export class SearchPage extends Component {
         }
         var result = [];
         pages.filter(e => !!e).forEach(e => result = [...result, ...e]);
-        this.setState({pages: pages, dataSource: this.buildDataSource(result)});
+        this.setState({pages: pages, loading:false, dataSource: this.buildDataSource(result)});
       })
       .catch((error) => {
         console.warn(error);
@@ -107,6 +107,12 @@ export class SearchPage extends Component {
     )
   }
 
+  renderHeaderRefreshing(){
+    return (
+      <View/>
+      )
+  }
+
   onInfinite() {
     console.log("onInfinite: ", this.state.currentPage);
     this.loadPage(this.state.currentPage+1);
@@ -130,8 +136,15 @@ export class SearchPage extends Component {
       this.setState({sortMode: sortMode});
       this.loadPage(0)
     }
+    
+    var loader = null;
+
+    if(this.state.loading){
+      loader = <LoadingIndicator/>
+    }
 
     return (
+
 
       <View style={[styles.container]}>
         <View style={[styles.shadow]}>
@@ -154,6 +167,7 @@ export class SearchPage extends Component {
             <Text style={buildSortStyles("updated")}>Last Update</Text>
           </TouchableHighlight>
         </View>
+        {loader}
         <RefreshInfiniteListView
           ref={(list) => {this.list= list}}
           style={[styles.flex]}
@@ -163,6 +177,7 @@ export class SearchPage extends Component {
           onRefresh={this.onRefresh}
           onInfinite={this.onInfinite}
           loadedAllData={this.loadedAllData}
+          renderHeaderRefreshing={this.renderHeaderRefreshing}
         />
       </View>
 
