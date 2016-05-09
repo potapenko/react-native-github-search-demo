@@ -11,25 +11,13 @@ import {
 import SearchBar from 'react-native-search-bar';
 import moment from 'momentjs';
 import RefreshInfiniteListView from '@remobile/react-native-refresh-infinite-listview';
-import {Flexer, Spacer, Avatar, Stars, LoadingIndicator} from './utils.js';
+import {Flexer, Spacer, Avatar, Stars, LoadingIndicator, lazyCall} from './utils.js';
 import {DetailsPage} from './details-page.js';
 
 const detailsRoute = {
   name: 'Details',
   component: DetailsPage,
 };
-
-var lazyId = 0;
-const clearLazy = () => {
-  clearInterval(lazyId);
-}
-const lazyCall = (cb, idle = 400) => {
-  clearLazy();
-  lazyId = setInterval(function(){
-    clearLazy();
-    cb();
-  }, idle);
-}
 
 export class SearchPage extends Component {
 

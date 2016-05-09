@@ -81,9 +81,20 @@ render() {
           </View>
       </TouchableHighlight>
       );
-}
+    }
 }
 
+var lazyId = 0;
+const clearLazy = () => {
+  clearInterval(lazyId);
+}
+export const lazyCall = (cb, idle = 400) => {
+  clearLazy();
+  lazyId = setInterval(function(){
+    clearLazy();
+    cb();
+  }, idle);
+}
 
 const styles = StyleSheet.create({
     overlay: {
