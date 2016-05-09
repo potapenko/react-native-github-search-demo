@@ -37,12 +37,12 @@ export class SearchPage extends Component {
 
 
   onSearch(searchString) {
-    this.setState({currentPage:1, loading: !!searchString, searchString: searchString, dataSource: this.buildDataSource([])});
+    this.setState({pages: [], currentPage:1, loading: !!searchString, searchString: searchString, dataSource: this.buildDataSource([])});
     setTimeout(()=> {this.loadPage(1)}, 200)
   }
 
   onRefresh(){
-    this.setState({currentPage:1, loading: true, dataSource: this.buildDataSource([])});
+    this.setState({pages: [], currentPage:1, loading: true, dataSource: this.buildDataSource([])});
     setTimeout(()=> {this.loadPage(1)}, 200)
   }
 
@@ -60,10 +60,11 @@ export class SearchPage extends Component {
         }
         var result = [];
         pages.filter(e => !!e).forEach(e => result = [...result, ...e]);
+        console.log(json.items.length, ":new list size: ", result.length, ", pages: ", pages.length)
         this.setState({pages: pages, loading:false, dataSource: this.buildDataSource(result)});
       })
       .catch((error) => {
-        console.warn(error);
+        console.warn("error:", error);
       });
   }
 
