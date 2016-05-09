@@ -167,6 +167,7 @@ export class SearchPage extends Component {
             <Text style={buildSortStyles("updated")}>Last Update</Text>
           </TouchableHighlight>
         </View>
+        <Spacer height={8}/>
         {loader}
         <RefreshInfiniteListView
           ref={(list) => {this.list= list}}
